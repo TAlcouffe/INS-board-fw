@@ -31,6 +31,29 @@ const PALConfig pal_default_config =
 #endif
 
 
+
+#define BOOTLOADER_MAGIC_VALUE 0xaabbccdd00112233
+static __attribute__((section(".noinit"))) uint64_t execute_bootloader;
+
+void check_bootloader(void)
+{
+    if (execute_bootloader == BOOTLOADER_MAGIC_VALUE) {
+        execute_bootloader = 0;
+        __asm__ __volatile__ (
+            "LDR  R0, =0x1FFF0000   \n"
+            "LDR  SP,[R0, #0]       \n"
+            "LDR  R0,[R0, #4]       \n"
+            "BX   R0                \n"
+        );
+    }
+}
+
+void reboot_and_run_bootloader(void)
+{
+    execute_bootloader = BOOTLOADER_MAGIC_VALUE;
+    NVIC_SystemReset();
+}
+
 void __early_init(void) {
     stm32_clock_init();
 }

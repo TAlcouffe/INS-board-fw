@@ -180,11 +180,17 @@ static void cmd_barometer(BaseSequentialStream *chp, int argc, char *argv[])
     i2cStop(driver);
 }
 
+static void cmd_bootloader(BaseSequentialStream *chp, int argc, char **argv)
+{
+    reboot_and_run_bootloader();
+}
+
 static const ShellCommand commands[] = {
   {"mem", cmd_mem},
   {"threads", cmd_threads},
   {"gyro", cmd_gyro},
   {"baro", cmd_barometer},
+  {"bootloader", cmd_bootloader},
   {NULL, NULL}
 };
 
@@ -262,6 +268,10 @@ int main(void)
 {
     halInit();
     chSysInit();
+
+    if (palReadPad(GPIOC, GPIOC_SDCARD_DETECT)) {
+        reboot_and_run_bootloader();
+    }
 
     chThdCreateStatic(led_task_wa, sizeof(led_task_wa), LOWPRIO, led_task, NULL);
 
