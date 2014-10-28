@@ -161,7 +161,7 @@ AR   = $(TRGT)ar
 OD   = $(TRGT)objdump
 SZ   = $(TRGT)size
 HEX  = $(CP) -O ihex
-BIN  = $(CP) -O binary
+BIN  = $(CP) -O binary -j startup -j constructors -j destructors -j .text -j .ARM.extab -j .ARM.exidx -j .eh_frame_hdr -j .eh_frame -j .textalign -j .data
 
 # ARM-specific options here
 AOPT =
