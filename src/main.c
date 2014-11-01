@@ -182,6 +182,9 @@ static void cmd_barometer(BaseSequentialStream *chp, int argc, char *argv[])
 
 static void cmd_bootloader(BaseSequentialStream *chp, int argc, char **argv)
 {
+    (void)argc;
+    (void)argv;
+    (void)chp;
     reboot_and_run_bootloader();
 }
 
